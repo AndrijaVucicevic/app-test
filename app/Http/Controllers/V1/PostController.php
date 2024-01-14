@@ -59,7 +59,8 @@ class PostController extends Controller
         $post = $this->postService->store($request, $this->user);
 
         return $post ?
-            (new StoreResource($post))->response()->setStatusCode(StatusCodeEnum::CREATED->value) : (new ErrorResource([]))->response()->setStatusCode(StatusCodeEnum::SERVER_ERROR->value);
+            (new StoreResource($post))->response()->setStatusCode(StatusCodeEnum::CREATED->value) : 
+            (new ErrorResource([]))->response()->setStatusCode(StatusCodeEnum::SERVER_ERROR->value);
     }
 
     /**
@@ -86,7 +87,8 @@ class PostController extends Controller
         $post = $this->postService->update($request, $post, $this->user);
 
         return $post ?
-            (new UpdateResource($post))->response()->setStatusCode(StatusCodeEnum::ACCEPTED->value) : (new ErrorResource([]))->response()->setStatusCode(StatusCodeEnum::SERVER_ERROR->value);
+            (new UpdateResource($post))->response()->setStatusCode(StatusCodeEnum::ACCEPTED->value) : 
+            (new ErrorResource([]))->response()->setStatusCode(StatusCodeEnum::SERVER_ERROR->value);
     }
 
     /**
