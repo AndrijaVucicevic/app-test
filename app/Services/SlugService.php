@@ -17,6 +17,7 @@ class SlugService
 
     public function generateSlug(string $title): string
     {
+        $title = trim($title);
         $slug = Str::slug($title);
 
         $count = $this->model->where('title', $title)->count();
@@ -29,12 +30,13 @@ class SlugService
 
     public function updateSlug(string $title, int $id): string
     {
+        $title = trim($title);
         $slug = Str::slug($title);
-        $checkTitle = $this->model->where('title', $title)
-            ->where('id', $id)->exists();
+        $post = $this->model->where('title', $title)
+            ->where('id', $id)->first();
 
-        if ($checkTitle) {
-            return $slug;
+        if ($post) {
+            return $post->slug;
         }
 
         $count = $this->model->where('title', $title)

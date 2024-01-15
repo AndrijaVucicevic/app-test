@@ -7,6 +7,7 @@ use App\Enums\AuditLogTypeEnum;
 use App\Http\Requests\V1\Post\PostRequest;
 use App\Http\Requests\V1\Post\UpdateRequest;
 use App\Log\LogPost;
+use App\Mappers\PostMapper;
 use App\Models\Post;
 use App\Models\PostAuthor;
 use App\Models\User;
@@ -29,7 +30,7 @@ class PostService implements PostServiceInterface
     public function store(PostRequest $request, User $user): Post|null
     {
         try {
-            $data = $request->only('title', 'content');
+            $data = PostMapper::mapToModelCreateAttributes($request->toArray());
             $data['slug'] = $this->slugService->generateSlug($data['title']);
             $authors = $request->input('authors');
             $post = null;
@@ -43,7 +44,6 @@ class PostService implements PostServiceInterface
             });
             return $post;
         } catch (Exception $e) {
-            dd($e->getMessage());
             LogPost::error(sprintf("PostService | store: %s", $e->getMessage()));
             return null;
         }
@@ -52,7 +52,7 @@ class PostService implements PostServiceInterface
     public function update(UpdateRequest $request, Post $post, User $user): Post|null
     {
         try {
-            $data = $request->only('title', 'content');
+            $data = PostMapper::mapToModelCreateAttributes($request->toArray());
             $data['slug'] = $this->slugService->updateSlug($data['title'], $post->id);
             $authors = $request->input('authors');
 
@@ -74,6 +74,7 @@ class PostService implements PostServiceInterface
             });
             return $post;
         } catch (Exception $e) {
+            dd($e->getMessage());
             LogPost::error(sprintf("PostService | update: %s", $e->getMessage()));
             return null;
         }
