@@ -14,6 +14,17 @@ class PostControllerTest extends TestCase
 
     protected bool $refreshDatabase = true;
 
+    public function test_store_unauthenticated()
+    {
+        $response = $this->get('/api/v1/posts', [
+            'Accept' => 'application/json',
+            'Authorization' => "Bearer 4|idemoooooooo"
+        ]);
+
+        $response->assertStatus(401)
+            ->assertJson(["message" => "Unauthenticated."]);
+    }
+
     public function test_store()
     {
         $data = $this->dataForTestStore();
